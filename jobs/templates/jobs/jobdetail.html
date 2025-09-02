@@ -1,0 +1,101 @@
+{% extends 'pawgoapp/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between mb-4">
+      <a href="{% url 'jobs:jobs_list' %}" class="btn btn-outline-secondary"> <i class="fas fa-arrow-left"></i> Trenutni poslovi </a>
+      <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary"> Tvoji poslovi <i class="fas fa-arrow-right"></i> </a>
+    </div>
+
+  <div class="card shadow-lg border-0 rounded-3">
+    <div class="card-header text-white bg-success bg-gradient py-4">
+      <h2 class="mb-0 text-center">
+        <i class="fas fa-dog me-2"></i>{{ job.title }}
+      </h2>
+    </div>
+    <div class="card-body p-4">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <p><i class="fas fa-user text-primary"></i>
+            Objavio: <a href="{% url 'profile_user' username=job.user.username %}" class="fw-bold">{{ job.user.username }}</a>
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p><i class="fas fa-map-marker-alt text-danger"></i> Lokacija: <span class="fw-semibold">{{ job.location }}</span></p>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <p><i class="fas fa-coins text-warning"></i> Budžet: <span class="fw-semibold">{{ job.budget }}/h</span></p>
+        </div>
+        <div class="col-md-6">
+          <p><i class="fas fa-clock text-primary"></i> Trajanje: <span class="fw-semibold">{{ job.duration }} sati</span></p>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <p><i class="fas fa-calendar-alt text-info"></i> Objavljeno: {{ job.pub_date|date:"d.m.Y H:i" }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><i class="fas fa-paw text-success"></i> Pas: {{ job.dog_breed }}</p>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h5 class="fw-bold"><i class="fas fa-file-alt text-secondary"></i> Opis posla</h5>
+        <p class="text-muted">{{ job.description }}</p>
+      </div>
+
+      <div class="mb-4">
+        <h5 class="fw-bold"><i class="fas fa-info-circle text-dark"></i> Status</h5>
+        {% if job.accepted %}
+          <p class="fw-semibold text-success">Prihvaćen: Da ({{ job.state }})</p>
+          {% if job.state == 'U tijeku' %}
+            <form method="post" action="{% url 'jobs:finish_job' job.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary">Završi posao</button>
+            </form>
+          {% endif %}
+        {% else %}
+          <p class="fw-semibold text-danger">Prihvaćen: NE ({{ job.state }})</p>
+          {% if job.user != request.user %}
+            {% if request.user.is_walker %}
+              <form method="post" action="{% url 'jobs:accept_job' job.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Prihvaćam</button>
+              </form>
+            {% else %}
+              <button type="button" class="btn btn-secondary" onclick="alert('Kako bi ste prihvatili posao potreban je status šetača, promijenite status na osobnim podacima!')">
+                Prihvaćam
+              </button>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% if request.user.username == job.user.username and job.state == 'Izvršen' %}
+    <div class="card shadow-sm border mt-4">
+      <div class="card-body">
+        <h4 class="text-danger"><i class="fas fa-exclamation-triangle"></i> Ostavi žalbu</h4>
+        <form method="POST" action="{% url 'jobs:dispute_form' job.id %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="dispute-title" class="form-label">O kojem poslu je riječ</label>
+            <input type="text" class="form-control" id="dispute-title" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label for="dispute-description" class="form-label">Napišite detalje prigovora</label>
+            <textarea class="form-control" id="dispute-description" name="description" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-danger">Priloži prigovor</button>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock content %}

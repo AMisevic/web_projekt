@@ -1,0 +1,69 @@
+{% extends 'pawgoapp/base.html' %}
+{% load static %}
+{% block content %}
+
+<script src="{% static 'jobs/js/jobs.js' %}"></script>
+
+<div class="container mt-4">
+  <div class="card p-3 mb-4 shadow-sm">
+    <form class="row g-3 align-items-end" onsubmit="return false;">
+      <div class="col-md-3">
+        <label for="location" class="form-label">Lokacija</label>
+        <select class="form-select" id="location">
+          <option value="">Sve</option>
+          <option value="zagreb">Zagreb</option>
+          <option value="split">Split</option>
+          <option value="rijeka">Rijeka</option>
+          <option value="osijek">Osijek</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="budget" class="form-label">Budžet</label>
+        <select class="form-select" id="budget">
+          <option value="">Sve</option>
+          <option value="low">0-10€/h</option>
+          <option value="mid">10-20€/h</option>
+          <option value="high">20€+</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="job_duration" class="form-label">Trajanje</label>
+        <select class="form-select" id="job_duration">
+          <option value="">Sve</option>
+          <option value="short">1h-2h</option>
+          <option value="medium">3h-4h</option>
+          <option value="long">5h-6h</option>
+        </select>
+      </div>
+        <div class="col-md-3 text-end">          
+          <button type="button" id="resetBtn" class="btn btn-outline-secondary w-100 mb-2">Reset</button>
+          <button type="button" id="filterBtn" class="btn btn-success w-100">Filtriraj</button>
+        </div>
+    </form>
+  </div>
+
+  <div class="row g-4">
+    {% for job in jobs %}
+    <div class="col-md-6 job-card"
+         data-location="{{ job.location|lower }}"
+         data-budget="{{ job.budget.amount }}"
+         data-duration="{{ job.duration }}">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body">
+          <h4 class="card-title mb-2 text-success">{{ job.title }}</h4>
+          <p><i class="fas fa-map-marker-alt text-danger"></i> {{ job.location }}</p>
+          <p><i class="fas fa-coins text-warning"></i> {{ job.budget.amount }} €/h</p>
+          <p><i class="fas fa-clock text-primary"></i> {{ job.duration }} h</p>
+          <a href="{% url 'jobs:job_detail' job.id %}" class="btn btn-outline-success">Detalji</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div id="noJobsMessage" class="text-center text-muted mt-4" style="display: none;">
+    <h5>Trenutno nema poslova za odabrane kriterije, pokušajte ponovno kasnije!</h5>
+  </div>
+</div>
+
+{% endblock content %}
