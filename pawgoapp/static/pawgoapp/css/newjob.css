@@ -1,0 +1,22 @@
+body {
+  background: url("{% static 'jobs/images/paws.jpg' %}") repeat;
+  background-size: 120px;
+  opacity: 0.95;
+}
+
+.form-background {
+  background: url("{% static 'jobs/images/paws.jpg' %}") repeat;
+  background-size: 150px; 
+  border-radius: 12px;
+}
+
+.btn-prilozi {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
+}
+
+.btn-prilozi:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}

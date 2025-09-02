@@ -1,0 +1,153 @@
+{% extends 'pawgoapp/base.html' %}
+
+{% block content %}
+<div id="dashboard_div">
+  <form method="POST" action="{% url 'dashboard' %}">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="firstname">Ime</label>
+        <input type="text" class="form-control" id="dashboard_input" name="first_name" value="{{ user.first_name }}">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="lastname">Prezime</label>
+        <input type="text" class="form-control" id="dashboard_input" name="last_name" value="{{ user.last_name }}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="username">Korisničko ime</label>
+      <input type="text" class="form-control" id="dashboard_input" name="username" value="{{ user.username }}">
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" class="form-control" id="dashboard_input" name="email" value="{{ user.email }}">
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="phone_number">Broj mobitela</label>
+        <input type="tel" class="form-control" id="dashboard_input" name="phone_number" value="{{ user.phone_number }}">
+      </div>
+      <div class="form-group col-md-2">
+        <label for="token_balance">Stanje</label>
+        <input type="number" class="form-control" id="dashboard_input" name="token_balance" placeholder="{{ user.token_balance }}" readonly>
+      </div>
+    </div>
+    <div class="form-group d-flex justify-content-center">
+      <div class="form-check mb-2 d-flex align-items-center">
+        <input class="form-check-input me-2" type="checkbox" id="is_walker" name="is_walker" 
+              {% if user.is_walker %}checked{% endif %}>
+        <label class="form-check-label mb-0" for="is_walker">Šetač</label>
+      </div>
+    </div>
+      <button type="submit" class="btn btn-primary">Spremi promjene</button>
+  </form>
+</div>
+
+<div class="container mt-5 mb-5">
+  <h2 class="text-center mb-5">Moji poslovi</h2>
+  <div class="accordion" id="jobsAccordion">
+    <div class="accordion-item mb-4">
+      <h2 class="accordion-header" id="headingAccepted">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAccepted">
+          Poslovi koje ste prihvatili
+        </button>
+      </h2>
+      <div id="collapseAccepted" class="accordion-collapse collapse" data-bs-parent="#jobsAccordion">
+        <div class="accordion-body">
+          {% if accepted_jobs %}
+            <div class="row">
+              {% for job in accepted_jobs %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                  <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                      <h5 class="card-title mb-2 text-success">{{ job.title }}</h5>
+                      <p><i class="fas fa-map-marker-alt text-danger"></i> {{ job.location }}</p>
+                      <p><i class="fas fa-coins text-warning"></i> {{ job.budget }}/h</p>
+                      {% if job.duration %}
+                        <p><i class="fas fa-clock text-primary"></i> {{ job.duration }} h</p>
+                      {% endif %}
+                      <a href="{% url 'jobs:job_detail' job.id %}" class="btn btn-outline-success btn-sm">Detalji</a>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-muted">Još niste prihvatili nijedan posao.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item mb-4">
+      <h2 class="accordion-header" id="headingPosted">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePosted">
+          Objavljeni poslovi
+        </button>
+      </h2>
+      <div id="collapsePosted" class="accordion-collapse collapse" data-bs-parent="#jobsAccordion">
+        <div class="accordion-body">
+          {% if posted_jobs %}
+            <div class="row">
+              {% for job in posted_jobs %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                  <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                      <h5 class="card-title mb-2 text-primary">{{ job.title }}</h5>
+                      <p><i class="fas fa-map-marker-alt text-danger"></i> {{ job.location }}</p>
+                      <p><i class="fas fa-coins text-warning"></i> {{ job.budget }}/h</p>
+                      {% if job.duration %}
+                        <p><i class="fas fa-clock text-primary"></i> {{ job.duration }} h</p>
+                      {% endif %}
+                      <a href="{% url 'jobs:job_detail' job.id %}" class="btn btn-outline-primary btn-sm">Detalji</a>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-muted">Još niste objavili nijedan posao.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item mb-4">
+      <h2 class="accordion-header" id="headingFinished">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFinished">
+          Izvršeni poslovi
+        </button>
+      </h2>
+      <div id="collapseFinished" class="accordion-collapse collapse" data-bs-parent="#jobsAccordion">
+        <div class="accordion-body">
+          {% if finished_jobs %}
+            <div class="row">
+              {% for job in finished_jobs %}
+                {% if job.poster != user %}
+                  <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0">
+                      <div class="card-body">
+                        <h5 class="card-title mb-2 text-secondary">{{ job.title }}</h5>
+                        <p><i class="fas fa-map-marker-alt text-danger"></i> {{ job.location }}</p>
+                        <p><i class="fas fa-coins text-warning"></i> {{ job.budget }}/h</p>
+                        {% if job.duration %}
+                          <p><i class="fas fa-clock text-primary"></i> {{ job.duration }} h</p>
+                        {% endif %}
+                        <a href="{% url 'jobs:job_detail' job.id %}" class="btn btn-outline-secondary btn-sm">Detalji</a>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-muted">Još nemate izvršenih poslova.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock content %}

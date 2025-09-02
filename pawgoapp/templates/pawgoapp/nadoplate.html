@@ -1,0 +1,84 @@
+{% extends 'pawgoapp/base.html' %}
+{% load static %}
+{% block content %}
+
+<script src="{% static 'pawgoapp/js/nadoplate.js' %}"></script>
+
+<div class="container mt-5">
+  <div class="text-center mb-4">
+    <h2 class="text-success font-weight-bold">Uplati bonom</h2>
+    <p class="text-muted">Unesite kod bona i nadoplatite svoj račun</p>
+  </div>
+
+  {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endfor %}
+
+  <div class="card shadow-sm p-4 mb-5" style="border-radius: 12px;">
+    <form method="POST" action="{% url 'topup' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="code" class="font-weight-bold">Unesite kod bona:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="code"
+          name="code"
+          placeholder="npr. 123456789012"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-success btn-block btn-lg mt-3">
+        Priloži
+      </button>
+    </form>
+  </div>
+
+  <h3 class="mb-3 text-center text-secondary">Dosadašnje nadoplate</h3>
+  <div class="d-flex justify-content-center mb-4 gap-2">
+    <select id="sort-date" class="form-select w-auto">
+      <option value="">Sortiraj po datumu</option>
+      <option value="asc">Najstariji → Najnoviji</option>
+      <option value="desc">Najnoviji → Najstariji</option>
+    </select>
+
+    <select id="sort-value" class="form-select w-auto">
+      <option value="">Sortiraj po cijeni</option>
+      <option value="asc">Manja → Veća</option>
+      <option value="desc">Veća → Manja</option>
+    </select>
+
+    <button id="apply-filter" class="btn btn-success">Filtriraj</button>
+    <button id="reset-filter" class="btn btn-outline-secondary">Reset</button>
+  </div>
+  <div id="topup-list" class="row">
+    {% if nadoplate %}
+      {% for nadoplata in nadoplate %}
+        {% if nadoplata.isused %}
+          <div class="col-md-6 col-lg-4 mb-4 topup-card"
+              data-value="{{ nadoplata.value.amount }}"
+              data-date="{{ nadoplata.expiration_date|date:'Y-m-d H:i:s' }}">
+            <div class="card shadow-sm h-100 border-success">
+              <div class="card-body text-center">
+                <h5 class="card-title text-success">{{ nadoplata.code }}</h5>
+                <p class="mb-1"><strong>Iznos:</strong> {{ nadoplata.value }}</p>
+                <p class="mb-0 text-muted"><strong>Datum:</strong> {{ nadoplata.expiration_date|date:"d.m.Y H:i" }}</p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <div class="alert alert-info text-center w-100">
+        Još nemate zabilježenih uplata!
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock content %}

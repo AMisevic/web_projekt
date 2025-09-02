@@ -1,0 +1,88 @@
+{% extends 'pawgoapp/base.html' %} 
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'pawgoapp/css/home.css' %}">
+
+<div class="hero-section"  style="background-image: url('{% static 'pawgoapp/images/dogs.jpg' %}');">
+  <div class="hero-card">
+    <h1 class="display-3 fw-bold">Dobrodošli na PawGO!</h1>
+    <p class="lead">Vaš partner za sretne i zdrave šetnje pasa</p>
+    <a href="{% url 'register' %}" class="btn btn-success btn-lg mt-3">Pridruži se sada</a>
+  </div>
+</div>
+
+<div class="container text-center mb-5 service">
+  <h2 class="mb-4">Naše usluge</h2>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card shadow p-3">
+        <i class="fas fa-dog mb-3 text-success"></i>
+        <h5>Pronađite Pouzdanog Šetača</h5>
+        <p>PawGO povezuje vlasnike ljubimaca s iskusnim šetačima.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow p-3">
+        <i class="fas fa-briefcase mb-3 text-primary"></i>
+        <h5>Objavite Posao</h5>
+        <p>Pridružite se našoj zajednici i pronađite nove prilike.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow p-3">
+        <i class="fas fa-users mb-3 text-warning"></i>
+        <h5>Povežite se</h5>
+        <p>Dijelite iskustva i gradite zajednicu ljubitelja pasa.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="dogCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'pawgoapp/images/dog1.jpg' %}" class="d-block w-100">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'pawgoapp/images/dog2.jpg' %}" class="d-block w-100">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'pawgoapp/images/dog3.jpg' %}" class="d-block w-100">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'pawgoapp/images/dog4.jpg' %}" class="d-block w-100">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'pawgoapp/images/dog5.jpg' %}" class="d-block w-100">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#dogCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#dogCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<div class="container why-choose text-center">
+  <h2>Zašto odabrati PawGO?</h2>
+  <div class="why-choose-element">
+    <strong>Sigurnost i Pouzdanost:</strong> Svi naši šetači prolaze kroz
+    temeljan postupak odabira kako bismo osigurali sigurnost vaših ljubimaca.
+  </div>
+  <div class="why-choose-element">
+    <strong>Jednostavno i Prijateljski:</strong> Naša platforma je jednostavna
+    za korištenje, s prijateljskim sučeljem koje omogućuje lako povezivanje
+    vlasnika i šetača.
+  </div>
+</div>
+
+<hr />
+
+<div class="text-center p-5 bg-success text-white mt-5 rounded call-to-action">
+  <h2>Spremni za sretne šetnje?</h2>
+  <a href="{% url 'register' %}" class="btn btn-light btn-lg mt-3">Pridružite se PawGO danas</a>
+</div>
+
+{% endblock content %}

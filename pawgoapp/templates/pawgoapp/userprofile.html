@@ -1,0 +1,46 @@
+{% extends 'pawgoapp/base.html' %}
+
+{% block content %}
+<div id="dashboard_div">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="firstname">Ime</label>
+            <input type="text" class="form-control" id="dashboard_input" name="first_name" value="{{ user.first_name }}" readonly >
+          </div>
+          <div class="form-group col-md-6">
+            <label for="lastname">Prezime</label>
+            <input type="text" class="form-control" id="dashboard_input" name="last_name" value="{{ user.last_name }}" readonly >
+          </div>
+        </div>
+        <div class="form-group">
+            <label for="username">Korisničko ime</label>
+            <input type="text" class="form-control" id="dashboard_input" name="username" value="{{ user.username }}" readonly >
+          </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="dashboard_input" name="email" value="{{ user.email }}" readonly >
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="telephone_number">Broj mobitela</label>
+            <input type="tel" class="form-control" id="dashboard_input" name="phone_number" value="{{ user.phone_number }}" readonly >
+          </div>
+          <div class="form-group col-md-2">
+            {% if request.user.username == user.username %}
+            <label for="token_balance">Stanje</label>
+            <input type="number" class="form-control" id="dashboard_input" name="token_balance"  placeholder="{{ user.token_balance }}" readonly>
+            {% endif %}
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-check"  id="dashboard_input">
+            <label class="form-check-label" >Šetač:</label>
+            {% if user.is_walker %}
+              <label class="form-check-label" >Da</label>
+            {% else %}
+              <label class="form-check-label">Ne</label>
+            {% endif %}
+          </div>
+        </div>
+</div>
+{% endblock content %}
